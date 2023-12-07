@@ -116,7 +116,7 @@ const processLinesPartTwo = lines => {
 
 const { readFileSync } = require("fs");
 
-const linesToProcess = readFileSync("/Users/streamer/Projects/aoc2023/03/input.txt").toString().split("\n");
+const linesToProcess = readFileSync("input.txt").toString().split("\n");
 
 if(partTwo) {
   const powers = processLinesPartTwo(linesToProcess);

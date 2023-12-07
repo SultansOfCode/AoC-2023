@@ -58,7 +58,7 @@ const processLinePartTwo = line => {
 
 let sum = 0;
 
-for(let line of readlines("input.txt")) {
+for(const line of readlines("input.txt")) {
   if(partTwo) {
     sum += processLinePartTwo(line);
   }
