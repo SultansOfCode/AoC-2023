@@ -43,7 +43,7 @@ const handTypesPartOne = [
 ];
 
 const handTypesPartTwo = [
-  ["five of a kind", /(.)\1\1\1\1/g],
+  ["five of a kind", /(.)\1\1\1\1|/g],
   ["four of a kind", /(.)\1\1\1|.(.)\2\2\2/g],
   ["full house", /(.)\1\1(.)\2|(.)\3(.)\4\4/g],
   ["three of a kind", /(.)\1\1|.(.)\2\2|..(.)\3\3/g],
