@@ -2,7 +2,7 @@ const { readlinesUntilEmpty } = require("../utils");
 
 const partTwo = true;
 
-const lines = readlinesUntilEmpty("/Users/streamer/Projects/aoc2023/11/input.txt").next().value;
+const lines = readlinesUntilEmpty("input.txt").next().value;
 
 const galaxies = [];
 const expandedRows = [];
