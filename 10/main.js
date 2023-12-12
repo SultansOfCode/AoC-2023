@@ -96,6 +96,34 @@ if(s.y < lines.length - 1 && bottomExits.includes(lines[s.y + 1][s.x])) {
   }
 }
 
+const walkersMinDx = Math.min(walker1.dx, walker2.dx);
+const walkersMaxDx = Math.max(walker1.dx, walker2.dx);
+const walkersMinDy = Math.min(walker1.dy, walker2.dy);
+const walkersMaxDy = Math.max(walker1.dy, walker2.dy);
+
+let sReplace = "S";
+
+if(walkersMinDx === -1 && walkersMaxDx === 1) {
+  sReplace = "-";
+}
+else if(walkersMinDy === -1 && walkersMaxDy === 1) {
+  sReplace = "|";
+}
+else if(walkersMinDx === -1 && walkersMinDy === -1) {
+  sReplace = "J";
+}
+else if(walkersMinDx === -1 && walkersMaxDy === 1) {
+  sReplace = "7";
+}
+else if(walkersMaxDx === 1 && walkersMinDy === -1) {
+  sReplace = "L";
+}
+else if(walkersMaxDx === 1 && walkersMaxDy === 1) {
+  sReplace = "F";
+}
+
+lines[s.y][s.x] = sReplace;
+
 const samePosition = () => (walker1.steps > 0 && walker2.steps > 0 && walker1.x === walker2.x && walker1.y === walker2.y);
 
 const processStep = walker => {
@@ -178,45 +206,11 @@ while(!samePosition()) {
   }
 }
 
-const inside = (point, vs) => {
-  // ray-casting algorithm based on
-  // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
-  
-  const [x, y] = point;
-  
-  let j = vs.length - 1;
-  let inside = false;
-
-  for (let i = 0; i < vs.length; ++i) {
-    const xi = vs[i][0];
-    const yi = vs[i][1];
-
-    const xj = vs[j][0];
-    const yj = vs[j][1];
-    
-    const intersect = ((yi > y) != (yj > y)) && (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
-
-    if(intersect) {
-      inside = !inside;
-    }
-
-    j = i;
-  }
-  
-  return inside;
-};
-
 if(partTwo) {
   for(let i = 0; i < lines.length; ++i) {
     const line = lines[i];
 
     for(let j = 0; j < line.length; ++j) {
-      const char = line[j];
-
-      if(char === "S") {
-        continue;
-      }
-
       const position = `${j}-${i}`;
 
       if(!loopPositions.includes(position)) {
@@ -228,18 +222,26 @@ if(partTwo) {
   let enclosed = 0;
 
   for(let i = 0; i < lines.length; ++i) {
-    const line = lines[i];
+    const line = lines[i]
+      .join("")
+      .replace(/\|/g, "I")
+      .replace(/F-*?7/g, "-")
+      .replace(/L-*?J/g, "-")
+      .replace(/L-*?7/g, "I")
+      .replace(/F-*?J/g, "I");
+
+    let inside = false;
 
     for(let j = 0; j < line.length; ++j) {
       const char = line[j];
 
-      if(char !== ".") {
+      if(char === "I") {
+        inside = !inside;
+
         continue;
       }
 
-      const position = [i, j];
-
-      if(!inside(position, loopVertices)) {
+      if(char !== "." || !inside) {
         continue;
       }
 
