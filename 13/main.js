@@ -1,30 +1,45 @@
 const { readlinesUntilEmpty } = require("../utils");
 
-const partTwo = false;
+const partTwo = true;
 
-const checkRowReflection = lines => {
-  const newLines = [...lines];
+const desiredDistance = (partTwo ? 1 : 0);
 
-  newLines.shift();
+const calculateDistance = (slice1, slice2) => {
+  let distance = 0;
+  let minLength = Math.min(slice1.length, slice2.length);
 
-  const middle = newLines.length / 2;
+  for(let i = 0; i < minLength; ++i) {
+    const line1 = slice1[i];
+    const line2 = slice2[i];
 
-  let i = middle - 1;
-  let j = i + 1;
+    for(let j = 0; j < line1.length; ++j) {
+      const char1 = line1[j];
+      const char2 = line2[j];
 
-  while(i >= 0 && j < newLines.length) {
-    const line1 = newLines[i];
-    const line2 = newLines[j];
+      if(char1 === char2) {
+        continue;
+      }
 
-    if(line1 !== line2) {
-      return 0;
+      ++distance;
     }
-
-    --i;
-    ++j;
   }
 
-  return middle + 1;
+  return distance;
+};
+
+const checkRowReflection = lines => {
+  for(let i = 1; i < lines.length; ++i) {
+    const slice1 = lines.slice(0, i).reverse();
+    const slice2 = lines.slice(-lines.length + i);
+
+    const distance = calculateDistance(slice1, slice2);
+
+    if(distance === desiredDistance) {
+      return i;
+    }
+  }
+
+  return 0;
 };
 
 const checkColReflection = lines => {
@@ -37,7 +52,7 @@ const checkColReflection = lines => {
       newLine.push(line[i]);
     }
 
-    newLines.push(newLine.join(""));
+    newLines.push(newLine);
   }
 
   return checkRowReflection(newLines);
@@ -45,9 +60,14 @@ const checkColReflection = lines => {
 
 const checkAllReflections = lines => {
   const rowReflection = checkRowReflection(lines);
+
+  if(rowReflection > 0) {
+    return rowReflection * 100;
+  }
+
   const colReflection = checkColReflection(lines);
 
-  return colReflection + rowReflection * 100;
+  return colReflection;
 };
 
 let sum = 0;

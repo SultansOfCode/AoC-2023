@@ -129,16 +129,11 @@ const cycle = () => {
 
 const cycles = (partTwo ? 1000000000 : 1);
 const md5s = [];
-let cycleFound = false;
 
 for(let i = 0; i < cycles; ++i) {
   cycle();
 
   if(!partTwo) {
-    continue;
-  }
-
-  if(cycleFound) {
     continue;
   }
 
@@ -152,15 +147,11 @@ for(let i = 0; i < cycles; ++i) {
     continue;
   }
 
-  cycleFound = true;
-
   const difference = md5s.length - md5Index;
+  const remaining = cycles - i - 1;
+  const cycleTimes = Math.trunc(remaining / difference);
 
-  while(i < cycles) {
-    i += difference;
-  }
-
-  i -= difference;
+  i += cycleTimes * difference;
 }
 
 let sum = 0;
